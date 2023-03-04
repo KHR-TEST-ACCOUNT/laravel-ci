@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.3-node-browsers
-      - image: cimg/postgres:11.17
+      - image: circleci/postgres:11.6-alpine
         environment:
           POSTGRES_DB: larasns
           POSTGRES_USER: default
@@ -42,6 +42,7 @@ jobs:
       - run:
           name: get ready for postgres
           command: |
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4EB27DB2A3B88B8B
             sudo apt-get update
             sudo apt-get install libpq-dev
             sudo docker-php-ext-install pdo_pgsql
