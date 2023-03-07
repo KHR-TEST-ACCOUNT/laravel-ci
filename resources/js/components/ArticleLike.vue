@@ -4,10 +4,12 @@
       type="button"
       class="btn m-0 p-1 shadow-none"
     >
-      <i class="fas fa-heart mr-1"
-         :class="{'red-text':this.isLikedBy, 'animated heartBeat fast':this.gotToLike}"
+      <!----------この行を変更(fa-heartをfa-thumbs-upに変更)---------->
+      <!----------この行を変更(red-textをblue-textに変更)---------->
+      <i class="fas fa-thumbs-up mr-1"
+         :class="{'blue-text':this.isLikedBy, 'animated heartBeat fast':this.gotToLike}"
          @click="clickLike"
-      />
+      /> 
     </button>
     {{ countLikes }}
   </div>
