@@ -42,6 +42,7 @@ jobs:
       - run:
           name: get ready for postgres
           command: |
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4EB27DB2A3B88B8B
             sudo apt-get update
             sudo apt-get install libpq-dev
             sudo docker-php-ext-install pdo_pgsql
@@ -50,12 +51,23 @@ jobs:
           name: php test
           command: vendor/bin/phpunit
 
-  deploy_old:
+  deploy_old: #==========この行を変更(deployをdeploy_oldに変更)==========
     docker:
       - image: circleci/php:7.3-node-browsers
     environment:
       AWS_DEFAULT_REGION: ap-northeast-1
     steps:
+      # - add_ssh_keys
+      # - run:
+      #     name: deploy
+      #     command: |
+      #       ssh -o StrictHostKeyChecking=no -t webapp@${HOST_NAME} "cd laravel-ci && \
+      #         git pull origin master && \
+      #         composer install -n --no-dev --prefer-dist && \
+      #         npm ci && \
+      #         npm run prod && \
+      #         php artisan migrate --force && \
+      #         php artisan config:cache"
       - checkout
       - run: sudo composer self-update --1
       - restore_cache:
@@ -93,7 +105,7 @@ jobs:
             --deployment-group-name laravel-ci \
             --s3-location bucket=${AWS_S3_BUCKET_NAME},key=laravel-ci.zip,bundleType=zip
 
-  deploy:
+  deploy: #==========この行を変更(deploy_tmpをdeployに変更)==========
     docker:
       - image: circleci/php:7.3-node-browsers
     steps:
@@ -120,3 +132,10 @@ workflows:
             branches:
               only:
                 - master
+      # - deploy_tmp:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
